@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Lista:</h2>
+    <!-- Compras a fazer -->
+    {% for item in out_cart %}
+    <ul>
+        <p>{{item[1]}} <a href="/cartadd/{{item[0]}}">check</a></p>
+        
+    </ul>
+    {% endfor %}
+    <br>
+    <!-- Compras feitas -->
+    {% for item in in_cart %}
+    <ul>
+        <p>{{item[1]}} <a href="/cartdel/{{item[0]}}">undo</a></p>
+    </ul>
+    {% endfor %}
+{% endblock %}

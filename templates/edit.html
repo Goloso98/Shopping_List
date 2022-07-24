@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Items:</h2>
+    <form action="/add" method="get">
+        <input type="text" name="name" id="name">
+        <input type="submit" value="Add">
+    </form>
+    {% for item in in_list %}
+    <ul>
+        <p>{{item[1]}} <a href="/delete/{{item[0]}}">delete</a> <a href="/listdel/{{item[0]}}">-remove</a></p>
+    </ul>
+    {% endfor %}
+    <br>
+    {% for item in out_list %}
+    <ul>
+        <p>{{item[1]}} <a href="/delete/{{item[0]}}">delete</a> <a href="/listadd/{{item[0]}}">+add</a></p>
+    </ul>
+    {% endfor %}
+    <h2>Reset</h2>
+    <a href="/reset">Click to reset shopping_cart</a>
+{% endblock %}
