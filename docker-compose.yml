@@ -6,5 +6,5 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - .database.db:/app/database.db
+      - ./database.db:/app/database.db
       # create the file before  $ docker-compose up
