@@ -2,12 +2,15 @@
 {% block content %}
     <h2>Lista:</h2>
     <!-- Compras a fazer -->
+    {% if out_cart |length %}
     {% for item in out_cart %}
     <ul>
         <p>{{item[1]}} <a href="/cartadd/{{item[0]}}">check</a></p>
-        
     </ul>
     {% endfor %}
+    {% else %}
+    <p>Everything done</p>
+    {% endif %}
     <br>
     <!-- Compras feitas -->
     {% for item in in_cart %}
