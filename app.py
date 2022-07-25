@@ -58,7 +58,7 @@ def reset():
 @app.route('/add')
 def add():
     name = request.args.get("name")
-    name = name.lower()
+    name = name.capitalize()
     db_insert( "INSERT INTO GROCERIES (NAME) VALUES (?);", \
         (name,) )
     return redirect(url_for("edit"))
