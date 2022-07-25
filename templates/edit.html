@@ -2,7 +2,7 @@
 {% block content %}
     <h2>Items:</h2>
     <form action="/add" method="get">
-        <input type="text" name="name" id="name">
+        <input type="text" name="name" id="name" autocomplete="off">
         <input type="submit" value="Add">
     </form>
     {% for item in in_list %}
