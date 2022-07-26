@@ -1,21 +1,65 @@
 {% extends "base.html" %}
 {% block content %}
-    <h2>Lista:</h2>
-    <!-- Compras a fazer -->
-    {% if out_cart |length %}
-    {% for item in out_cart %}
-    <ul>
-        <p>{{item[1]}} <a href="/cartadd/{{item[0]}}">check</a></p>
-    </ul>
-    {% endfor %}
-    {% else %}
-    <p>Everything done</p>
-    {% endif %}
-    <br>
-    <!-- Compras feitas -->
-    {% for item in in_cart %}
-    <ul>
-        <p>{{item[1]}} <a href="/cartdel/{{item[0]}}">undo</a></p>
-    </ul>
-    {% endfor %}
+    <!-- Todo list section -->
+    <div class="row m-1 px-1">
+        <div class="col mx-auto">
+            <!-- Unhecked items start -->
+            {% if out_cart |length < 1 %}
+            <div class="row px-0 align-items-center rounded">
+                <div class="col-auto px-1 d-flex align-items-center">
+                    <h2>
+                        <i class="bi bi-bag-check text-success btn" data-toggle="tooltip" data-placement="bottom" title="Compras feitas"></i>
+                    </h2>
+                </div>
+                <div class="col px-0 d-flex align-items-center">
+                    <h4><u>Compras feitas</u></h4>
+                </div>
+            </div>
+            {% endif %}
+            {% for item in out_cart %}
+            <!-- Item(n) start -->
+            <div class="row px-0 align-items-center rounded">
+                <div class="col-auto px-1 d-flex align-items-center">
+                    <h2>
+                        <a href="/cartadd/{{item[0]}}">
+                            <i class="bi bi-bag-plus text-primary btn" data-toggle="tooltip" data-placement="bottom" title="Adicionar ao carrinho"></i>
+                        </a>
+                    </h2>
+                </div>
+                <div class="col px-0 d-flex align-items-center">
+                    <h4>
+                        {{item[1]}}
+                    </h4>
+                </div>
+            </div>
+            <!-- Item(n) end -->
+            {% endfor %}
+            <!-- Unhecked items end -->
+            <!-- Checked items start -->
+            {% if in_cart |length %}
+            <br>
+            {% endif %}
+            {% for item in in_cart %}
+            <!-- Item(n) start -->
+            <div class="row px-0 align-items-center rounded text-secondary">
+                <div class="col-auto px-1 d-flex align-items-center">
+                    <h2>
+                        <a href="/cartdel/{{item[0]}}">
+                            <i class="bi bi-bag-dash text-secondary btn" data-toggle="tooltip" data-placement="bottom" title="Mark as complete"></i>
+                        </a>
+                    </h2>
+                </div>
+                <div class="col px-0 d-flex align-items-center">
+                    <del>
+                        <h5>
+                            {{item[1]}}
+                        </h5>
+                    </del>
+                </div>
+            </div>
+            <!-- Item(n) end -->
+            {% endfor %}
+            <!-- Checked items end -->
+        </div>
+    </div>
 {% endblock %}
