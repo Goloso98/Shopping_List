@@ -5,10 +5,10 @@
         <div class="col mx-auto">
             <!-- Unhecked items start -->
             {% if out_cart |length < 1 %}
-            <div class="row px-0 align-items-center rounded">
+            <div class="row px-0 mx-auto align-items-center rounded">
                 <div class="col-auto px-1 d-flex align-items-center">
                     <h2>
-                        <i class="bi bi-bag-check text-success btn" data-toggle="tooltip" data-placement="bottom" title="Compras feitas"></i>
+                        <i class="bi bi-bag-check text-success p-2" data-placement="bottom" title="Compras feitas"></i>
                     </h2>
                 </div>
                 <div class="col px-0 d-flex align-items-center">
@@ -21,8 +21,8 @@
             <div class="row px-0 align-items-center rounded">
                 <div class="col-auto px-1 d-flex align-items-center">
                     <h2>
-                        <a href="/cartadd/{{item[0]}}">
-                            <i class="bi bi-bag-plus text-primary btn" data-toggle="tooltip" data-placement="bottom" title="Adicionar ao carrinho"></i>
+                        <a href="/cartadd/{{item[0]}}" class="btn btn-light" role="button">
+                            <i class="bi bi-bag-plus text-primary" data-placement="bottom" title="Adicionar ao carrinho"></i>
                         </a>
                     </h2>
                 </div>
@@ -44,8 +44,8 @@
             <div class="row px-0 align-items-center rounded text-secondary">
                 <div class="col-auto px-1 d-flex align-items-center">
                     <h2>
-                        <a href="/cartdel/{{item[0]}}">
-                            <i class="bi bi-bag-dash text-secondary btn" data-toggle="tooltip" data-placement="bottom" title="Mark as complete"></i>
+                        <a href="/cartdel/{{item[0]}}" class="btn btn-light" role="button">
+                            <i class="bi bi-bag-dash text-secondary" data-placement="bottom" title="Remover do carrinho"></i>
                         </a>
                     </h2>
                 </div>
