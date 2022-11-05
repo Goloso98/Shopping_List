@@ -40,19 +40,19 @@ def home():
         WHERE SHOPPING_LIST AND SHOPPING_CART;")
     out_cart = db_fetchall("SELECT ID, NAME FROM GROCERIES \
         WHERE SHOPPING_LIST AND NOT(SHOPPING_CART);")
-    return render_template('home.html', in_cart=in_cart, out_cart=out_cart)
+    return render_template('home.html', link="home", in_cart=in_cart, out_cart=out_cart)
 
 @app.route('/edit')
 def edit():
     in_list = db_fetchall("SELECT ID, NAME, SHOPPING_LIST FROM GROCERIES WHERE SHOPPING_LIST=1;")
     out_list = db_fetchall("SELECT ID, NAME, SHOPPING_LIST FROM GROCERIES WHERE SHOPPING_LIST=0;")
-    return render_template('edit.html', in_list=in_list, out_list=out_list)
+    return render_template('edit.html', link="edit", in_list=in_list, out_list=out_list)
 
 # --- API ---
 # --- /edit view
 @app.route('/reset')
 def reset():
-    db_exec( "UPDATE GROCERIES SET SHOPPING_CART=0;")
+    db_exec( "UPDATE GROCERIES SET SHOPPING_CART=0, SHOPPING_LIST=0;")
     return redirect(url_for("edit"))
 
 @app.route('/add')
