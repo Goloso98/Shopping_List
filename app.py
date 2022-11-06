@@ -91,7 +91,7 @@ def edit():
 # --- /edit view
 @app.route('/reset')
 def reset():
-    db_exec( "UPDATE GROCERIES SET SHOPPING_CART=0, SHOPPING_LIST=0;")
+    db_insert( "UPDATE GROCERIES SET SHOPPING_CART=0, SHOPPING_LIST=0;", (), timestamp=True )
     return redirect(url_for("edit"))
 
 @app.route('/add')
