@@ -26,7 +26,7 @@
                 <a class="navbar-brand" href="#">Compras</a>
                 <ul class="navbar-nav me-auto mb-2 mb-sm-0">
                     <li class="nav-item">
-                        <a class="nav-link {{ 'active' if link=='home' }}" href="/home">Home</a>
+                        <a class="nav-link {{ 'active' if link=='home' }}" href="/home">Lista</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ 'active' if link=='edit' }}" href="/edit">Editar</a>
@@ -50,8 +50,11 @@
 
     {% block content %}
     {% endblock %}
-    
     </div>
+
+    <footer>
+        <p>Ultimo update: {{ lastupdate() }}</p>
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@latest/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

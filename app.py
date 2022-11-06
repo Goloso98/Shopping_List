@@ -1,36 +1,73 @@
+from datetime import datetime
 from flask import Flask, redirect, render_template, url_for, request
-import sqlite3
+import os
+import sqlite3 as sql
 
 app = Flask(__name__, )
 
-DB_FILE = "database.db"
+DB_FILE = "db/database.db"
+DB_SOURCE = "db/schema.sql"
 
 # --- DB ---
+def db_init():
+    if not os.path.exists(DB_FILE):
+        con = sql.connect(DB_FILE)
+        cur = con.cursor()
+        with open(DB_SOURCE, "r") as f:
+            lines = f.readlines()
+        script = ''.join(lines)
+        cur.executescript(script)
+        cur.close()
+    return
+
+def db_conn():
+    return sql.connect(DB_FILE,
+        detect_types=sql.PARSE_DECLTYPES | sql.PARSE_COLNAMES)
+
 def db_fetchall_star():
     return db_fetchall("SELECT * FROM GROCERIES;");
 
 def db_fetchall(string):
-    conn = sqlite3.connect(DB_FILE)
+    conn = db_conn()
     c = conn.cursor()
     rows = c.execute(string).fetchall()
     conn.close()
     return rows
 
+def db_lastupdate():
+    conn = db_conn()
+    with conn:
+        dt = conn.execute("SELECT TS FROM LASTUPDATE").fetchone()[0]
+    conn.close()
+    return dt
+
 def db_exec(string):
-    conn = sqlite3.connect(DB_FILE)
+    conn = db_conn()
     c = conn.cursor()
     c.execute(string)
     conn.commit()
     conn.close()
 
-def db_insert(string, values):
+def db_insert(string, values, timestamp = False):
     """string be like "UPDATE fish SET tank_number = ? WHERE name = ?",
     then the ? values in a tuple"""
-    conn = sqlite3.connect(DB_FILE)
+    conn = db_conn()
     c = conn.cursor()
     c.execute(string, values)
+    if timestamp:
+        now = datetime.now()
+        c.execute( 'UPDATE LASTUPDATE SET TS=?;', (now,))
     conn.commit()
     conn.close()
+
+# --- run on every request ---
+@app.context_processor
+def utility_processor():
+    def lastupdate():
+        dt = db_lastupdate()
+        txt = dt.strftime("%d/%m/%Y - %H:%M")
+        return txt
+    return dict(lastupdate=lastupdate)
 
 # --- VIEWS ---
 @app.route('/')
@@ -60,25 +97,25 @@ def add():
     name = request.args.get("name")
     name = name.capitalize()
     db_insert( "INSERT INTO GROCERIES (NAME) VALUES (?);", \
-        (name,) )
+        (name,), timestamp=True )
     return redirect(url_for("edit"))
 
 @app.route('/delete/<id>')
 def delete(id):
     db_insert( 'DELETE FROM GROCERIES WHERE ID=?;', \
-        (id,) )
+        (id,), timestamp=True )
     return redirect(url_for("edit"))
 
 @app.route('/listadd/<id>')
 def listadd(id):
     db_insert( 'UPDATE GROCERIES SET SHOPPING_LIST=1 WHERE ID=?;', \
-        (id,) )
+        (id,), timestamp=True )
     return redirect(url_for("edit"))
 
 @app.route('/listdel/<id>')
 def listdel(id):
     db_insert( 'UPDATE GROCERIES SET SHOPPING_LIST=0 WHERE ID=?;', \
-        (id,) )
+        (id,), timestamp=True )
     return redirect(url_for("edit"))
 
 # --- /home view
@@ -95,13 +132,7 @@ def cartdel(id):
     return redirect(url_for("home"))
 
 
-schema = """CREATE TABLE IF NOT EXISTS GROCERIES (
-    ID            INTEGER PRIMARY KEY AUTOINCREMENT,
-    NAME          TEXT NOT NULL,
-    SHOPPING_LIST BOOLEAN DEFAULT 1,
-    SHOPPING_CART BOOLEAN DEFAULT 0
-    );"""
-db_exec(schema)
+db_init()
 
 # if __name__ == "__main__":
 #     schema = """CREATE TABLE IF NOT EXISTS GROCERIES (
