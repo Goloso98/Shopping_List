@@ -17,7 +17,9 @@ def db_init():
             lines = f.readlines()
         script = ''.join(lines)
         cur.executescript(script)
+        con.commit()
         cur.close()
+        con.close()
     return
 
 def db_conn():
@@ -29,15 +31,13 @@ def db_fetchall_star():
 
 def db_fetchall(string):
     conn = db_conn()
-    c = conn.cursor()
-    rows = c.execute(string).fetchall()
+    rows = conn.execute(string).fetchall()
     conn.close()
     return rows
 
 def db_lastupdate():
     conn = db_conn()
-    with conn:
-        dt = conn.execute("SELECT TS FROM LASTUPDATE").fetchone()[0]
+    dt = conn.execute("SELECT TS FROM LASTUPDATE").fetchone()[0]
     conn.close()
     return dt
 
@@ -46,6 +46,7 @@ def db_exec(string):
     c = conn.cursor()
     c.execute(string)
     conn.commit()
+    c.close()
     conn.close()
 
 def db_insert(string, values, timestamp = False):
@@ -58,6 +59,7 @@ def db_insert(string, values, timestamp = False):
         now = datetime.now()
         c.execute( 'UPDATE LASTUPDATE SET TS=?;', (now,))
     conn.commit()
+    c.close()
     conn.close()
 
 # --- run on every request ---
